@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foltï Charge — EV charging, anywhere you park</title>
+<meta name="description" content="Find a free charger, plug in, tap to pay. Fast EV charging across Lagos, and fleet tools to run it all.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<a class="skip" href="#how">Skip the animation</a>
+
+<header class="nav">
+  <a class="logo" href="#top" aria-label="Foltï Charge home">
+    <svg viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="var(--bay)"/><path d="M15.5 5 8.5 15.5h5L12 23l7.5-10.5h-5L15.5 5Z" fill="var(--ink)"/></svg>
+    <span>Foltï <b>Charge</b></span>
+  </a>
+  <nav aria-label="Main">
+    <a href="#stations">Stations</a>
+    <a href="#fleet">Vehicles</a>
+    <a href="#fleet">Fleet</a>
+  </nav>
+  <div class="nav-end">
+    <a class="link" href="login.html">Log in</a>
+    <a class="btn btn-bay" href="login.html">Dashboard</a>
+  </div>
+</header>
+
+<main>
+<section class="scene" id="top" aria-label="Find a charging station">
+  <div class="stage" id="stage" data-phase="hero">
+    <canvas id="gl" aria-label="3D model of a DC fast charger. Scroll to assemble it, then drag to rotate."></canvas>
+
+    <div class="hero">
+      <h1>Charge anywhere you park.</h1>
+      <p>Fast chargers across Lagos that you can find, start and pay for from your phone. No membership card, no queue at the pump.</p>
+      <form class="find" role="search" onsubmit="location.hash='stations';return false">
+        <label class="find-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></svg>
+          <span class="sr">Your location</span>
+          <input placeholder="Enter your location" aria-label="Your location">
+        </label>
+        <button class="btn btn-bay" type="submit">Find a station</button>
+      </form>
+      <p class="live"><span class="pulse" aria-hidden="true"></span><b>41 of 58</b> chargers free right now</p>
+    </div>
+
+    <ol class="captions" aria-label="What's inside a charger">
+      <li><span class="tag">Power</span><h2>Up to 150 kW.</h2><p>Stacked power modules add about 200 km of range in 20 minutes on most EVs.</p></li>
+      <li><span class="tag">Payment</span><h2>Tap a card or your phone.</h2><p>Contactless reader on every unit. No sign-up needed to start a session.</p></li>
+      <li><span class="tag">Uptime</span><h2>Open 24 hours.</h2><p>The light ring tells you from across the car park: green is free, yellow is in use.</p></li>
+    </ol>
+
+    <div class="done-bar">
+      <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Drag to look around the charger</p>
+      <a class="btn btn-bay" href="#stations">Find one near you</a>
+    </div>
+
+    <p class="hint" aria-hidden="true">Scroll to build a charger</p>
+    <div class="meter" aria-hidden="true"><span id="meterFill"></span><b id="meterPct">0%</b></div>
+  </div>
+</section>
+
+<!-- How it works: four parking bays -->
+<section class="how" id="how" aria-labelledby="howTitle">
+  <div class="wrap">
+    <div class="how-head">
+      <h2 class="display" id="howTitle">Four steps from parked to charged.</h2>
+      <p>The same at every station, whatever you drive.</p>
+    </div>
+    <ol class="bays">
+      <li class="bay"><span class="bay-n">1</span>
+        <svg class="bay-ico" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30h32M12 30l3-9h18l3 9M14 30v5M34 30v5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="30" r="0" /></svg>
+        <h3>Drive in</h3><p>Pick a station in the app and park in a bay with the yellow lines.</p></li>
+      <li class="bay"><span class="bay-n">2</span>
+        <svg class="bay-ico" viewBox="0 0 48 48" aria-hidden="true"><path d="M18 8v8M30 8v8M14 16h20v6a10 10 0 0 1-20 0v-6ZM24 32v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3>Plug in</h3><p>Take the connector from the holster and click it into your car. CCS2 and Type 2.</p></li>
+      <li class="bay"><span class="bay-n">3</span>
+        <svg class="bay-ico" viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="8" width="20" height="32" rx="4" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M36 18a8 8 0 0 1 0 12M40 14a14 14 0 0 1 0 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <h3>Tap to pay</h3><p>Hold your phone or card to the reader, or start the session in the app.</p></li>
+      <li class="bay"><span class="bay-n">4</span>
+        <svg class="bay-ico" viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="16" width="28" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M40 21v6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="12" y="20" width="14" height="8" rx="1" fill="currentColor"/></svg>
+        <h3>Charge up</h3><p>Grab a coffee. We'll send a notification at 80% and when you're full.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- Stations -->
+<section class="stations" id="stations" aria-labelledby="stTitle">
+  <div class="wrap">
+    <div class="st-head">
+      <h2 class="display" id="stTitle">Find a station near you.</h2>
+      <p>New sites go live every month. Bay status updates every 30 seconds.</p>
+    </div>
+    <div class="st-grid">
+      <aside class="st-panel">
+        <label class="st-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input placeholder="Search area or street" aria-label="Search stations"></label>
+        <div class="filters" role="group" aria-label="Filter stations">
+          <button aria-pressed="true">Free now</button><button aria-pressed="false">DC fast</button><button aria-pressed="false">CCS2</button><button aria-pressed="false">24 hours</button>
+        </div>
+        <ul class="st-list">
+          <li class="st" data-i="0" tabindex="0"><div class="st-main"><h3>Admiralty Way</h3><p>Lekki Phase 1</p></div><div class="st-side"><span class="free">4 free</span><small>150 kW</small><small>2.1 km</small></div><div class="slots" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></li>
+          <li class="st" data-i="1" tabindex="0"><div class="st-main"><h3>Ozumba Mbadiwe</h3><p>Victoria Island</p></div><div class="st-side"><span class="free">1 free</span><small>60 kW</small><small>5.4 km</small></div><div class="slots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div></li>
+          <li class="st full" data-i="2" tabindex="0"><div class="st-main"><h3>Bourdillon Road</h3><p>Ikoyi</p></div><div class="st-side"><span class="free">Full, ~15 min</span><small>60 kW</small><small>6.0 km</small></div><div class="slots" aria-hidden="true"><i></i><i></i><i></i><i></i></div></li>
+          <li class="st" data-i="3" tabindex="0"><div class="st-main"><h3>Herbert Macaulay Way</h3><p>Yaba</p></div><div class="st-side"><span class="free">3 free</span><small>22 kW AC</small><small>11.8 km</small></div><div class="slots" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></li>
+          <li class="st" data-i="4" tabindex="0"><div class="st-main"><h3>Isaac John Street</h3><p>Ikeja GRA</p></div><div class="st-side"><span class="free">5 free</span><small>150 kW</small><small>19.3 km</small></div><div class="slots" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></li>
+        </ul>
+      </aside>
+      <div class="map" aria-label="Station map">
+        <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="800" height="600" fill="#dfe2dd"/>
+          <path d="M0 330C90 318 160 352 250 344C340 336 400 304 480 312C560 320 650 360 800 348V430C700 440 600 420 520 410C430 400 360 438 270 440C170 442 90 420 0 426Z" fill="#b9d3d6"/>
+          <path d="M0 520C120 508 260 530 400 522S650 500 800 512V600H0Z" fill="#b9d3d6"/>
+          <g stroke="#ffffff" stroke-width="9" fill="none" stroke-linecap="round">
+            <path d="M0 150C160 140 300 190 430 176S650 120 800 130"/>
+            <path d="M120 0C130 110 160 200 150 330"/>
+            <path d="M420 0C430 90 410 200 420 310"/>
+            <path d="M0 480C150 470 320 488 470 474S700 456 800 462"/>
+            <path d="M600 420C610 470 620 540 610 600"/>
+            <path d="M260 440 300 600"/>
+          </g>
+          <g stroke="#ffffff" stroke-width="3" fill="none" opacity=".8">
+            <path d="M0 80H800M0 250H800M300 0V330M560 0V320M700 0V330"/>
+          </g>
+          <g fill="#7a8187" font-family="Barlow" font-size="14" font-weight="500">
+            <text x="60" y="110">Ikeja</text><text x="440" y="90">Yaba</text><text x="330" y="380">Lagos Lagoon</text>
+            <text x="150" y="505">Victoria Island</text><text x="470" y="455">Ikoyi</text><text x="660" y="560">Lekki</text>
+          </g>
+        </svg>
+        <button class="pin" data-i="0" style="--x:84%;--y:86%" aria-label="Admiralty Way, 4 free"><span>4</span></button>
+        <button class="pin" data-i="1" style="--x:27%;--y:79%" aria-label="Ozumba Mbadiwe, 1 free"><span>1</span></button>
+        <button class="pin full" data-i="2" style="--x:62%;--y:72%" aria-label="Bourdillon Road, full"><span>0</span></button>
+        <button class="pin" data-i="3" style="--x:55%;--y:24%" aria-label="Herbert Macaulay Way, 3 free"><span>3</span></button>
+        <button class="pin" data-i="4" style="--x:13%;--y:20%" aria-label="Isaac John Street, 5 free"><span>5</span></button>
+        <div class="map-card" id="mapCard" aria-live="polite">
+          <h3 id="mcName">Admiralty Way</h3>
+          <p id="mcMeta">4 of 6 bays free. 150 kW DC. CCS2 and Type 2.</p>
+          <a class="btn btn-ink" href="#">Get directions</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Fleet / platform -->
+<section class="fleet" id="fleet" aria-labelledby="flTitle">
+  <div class="wrap fl-grid">
+    <div class="fl-copy">
+      <h2 class="display" id="flTitle">Run your fleet from one screen.</h2>
+      <p>Every vehicle's charge level, every session and every naira of energy, in the same dashboard our own stations run on.</p>
+      <ul class="fl-points">
+        <li><h3>Vehicles</h3><p>Live battery level and range for each car, with alerts before anyone runs low.</p></li>
+        <li><h3>Charge points</h3><p>Status, faults and uptime for every unit you own or use.</p></li>
+        <li><h3>Billing</h3><p>One monthly invoice per fleet, split by driver or cost centre.</p></li>
+      </ul>
+      <a class="btn btn-ink" href="login.html">Open the dashboard</a>
+    </div>
+
+    <div class="dash" aria-label="Dashboard preview">
+      <div class="dash-top">
+        <span class="dash-title">Fleet overview</span>
+        <span class="dash-date">Today, 14:20</span>
+      </div>
+      <div class="dash-kpis">
+        <div><small>Vehicles on the road</small><b>36<span>/42</span></b></div>
+        <div><small>Energy today</small><b>1,284<span> kWh</span></b></div>
+        <div><small>Avg. battery</small><b>68<span>%</span></b></div>
+      </div>
+      <div class="dash-chart">
+        <small>Energy delivered, last 7 days</small>
+        <svg viewBox="0 0 320 90" preserveAspectRatio="none" aria-hidden="true">
+          <g fill="var(--bay)">
+            <rect x="6" y="40" width="30" height="50" rx="4"/><rect x="51" y="28" width="30" height="62" rx="4"/><rect x="96" y="46" width="30" height="44" rx="4"/><rect x="141" y="20" width="30" height="70" rx="4"/><rect x="186" y="34" width="30" height="56" rx="4"/><rect x="231" y="52" width="30" height="38" rx="4" opacity=".5"/><rect x="276" y="12" width="30" height="78" rx="4"/>
+          </g>
+        </svg>
+      </div>
+      <ul class="dash-list">
+        <li><span class="plate">LND 482 KJ</span><span class="bar"><i style="width:82%"></i></span><span class="pct">82%</span><span class="state ok">Driving</span></li>
+        <li><span class="plate">EKY 119 AB</span><span class="bar"><i style="width:47%"></i></span><span class="pct">47%</span><span class="state chg">Charging</span></li>
+        <li><span class="plate">APP 730 XE</span><span class="bar low"><i style="width:14%"></i></span><span class="pct">14%</span><span class="state low">Low</span></li>
+        <li><span class="plate">KJA 256 FG</span><span class="bar"><i style="width:91%"></i></span><span class="pct">91%</span><span class="state ok">Parked</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- App CTA -->
+<section class="road" aria-labelledby="roadTitle">
+  <div class="wrap road-inner">
+    <h2 class="display-xl" id="roadTitle">Ready to hit the road?</h2>
+    <p>Get the app to find stations, start charging and keep every receipt in one place.</p>
+    <div class="stores">
+      <a class="store" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.8-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.7 0 0-2.5-1-2.5-3.7zM14.1 5.8c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg><span><small>Download on the</small>App Store</span></a>
+      <a class="store" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.8v18.4c0 .3.3.5.6.4l10.3-9.4L4.6 2.4c-.3-.1-.6.1-.6.4zm12.1 8.2 2.9-2.7-12.4-6.9 9.5 9.6zm0 2-9.5 9.6 12.4-6.9-2.9-2.7zm4.2-3.9-2.9 1.6 3.1 1.7c.8-.4.8-1.6 0-2l-.2-.1v-1.2z"/></svg><span><small>Get it on</small>Google Play</span></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <a class="logo" href="#top" aria-label="Foltï Charge home"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="var(--bay)"/><path d="M15.5 5 8.5 15.5h5L12 23l7.5-10.5h-5L15.5 5Z" fill="var(--ink)"/></svg><span>Foltï <b>Charge</b></span></a>
+      <p>Electric vehicle charging that's reliable, fast and open to every driver. Part of <a href="https://www.folti.io/">Foltï</a>.</p>
+    </div>
+    <nav aria-label="Product"><h3>Product</h3><a href="#stations">Stations</a><a href="#fleet">Vehicles</a><a href="#fleet">Fleet</a></nav>
+    <nav aria-label="Company"><h3>Company</h3><a href="#">About</a><a href="#">Contact</a><a href="#">Support</a></nav>
+    <nav aria-label="Legal"><h3>Legal</h3><a href="#">Privacy</a><a href="#">Terms</a></nav>
+    <p class="copy">© 2026 Foltï Charge</p>
+  </div>
+</footer>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

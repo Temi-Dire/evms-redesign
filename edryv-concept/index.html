@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eDryv — Electric rides and charging in Lagos</title>
+<meta name="description" content="Book an electric ride across Lagos or find a free charger for your own EV.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+
+<a class="skip" href="#services">Skip the animation</a>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="eDryv home">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="currentColor"/><path d="M9 17.5h13.6a6.8 6.8 0 1 0-1.9 5.2" fill="none" stroke="var(--oxygen)" stroke-width="2.6" stroke-linecap="round"/></svg>
+    <span>eDryv</span>
+  </a>
+  <nav aria-label="Main">
+    <a href="#stations">Stations</a>
+    <a href="#fleet">Vehicles</a>
+    <a href="#services">Fleet &amp; business</a>
+  </nav>
+  <div class="nav-actions">
+    <a class="btn btn-ghost" href="#">Dashboard</a>
+    <a class="btn btn-solid" href="#app">Get the app</a>
+  </div>
+</header>
+
+<main>
+<!-- ============ HERO + ASSEMBLY (one pinned scene) ============ -->
+<section class="assembly" id="top" aria-label="Book a ride">
+  <div class="stage" id="stage" data-phase="hero">
+    <canvas id="car" aria-label="3D model of an eDryv electric car. Scroll to assemble it, then drag to rotate."></canvas>
+    <img class="car-fallback" id="carFallback" alt="" hidden>
+
+    <div class="hero-copy">
+      <h1>Electric rides and chargers, all over Lagos.</h1>
+      <p class="lede">Book an eDryv to anywhere in the city, or find a free charger for your own EV. Every car in our fleet runs on green electricity.</p>
+
+      <form class="book" onsubmit="return false" aria-label="Book a ride">
+        <div class="book-tabs" role="tablist">
+          <button role="tab" aria-selected="true" type="button">Ride</button>
+          <button role="tab" aria-selected="false" type="button">For someone else</button>
+          <button role="tab" aria-selected="false" type="button">Rental</button>
+          <button role="tab" aria-selected="false" type="button">Schedule</button>
+        </div>
+        <div class="route">
+          <label><span class="dot dot-from" aria-hidden="true"></span><span class="sr">Pickup</span><input value="Current location" aria-label="Pickup"></label>
+          <label><span class="dot dot-to" aria-hidden="true"></span><span class="sr">Destination</span><input placeholder="Where to?" aria-label="Destination"></label>
+        </div>
+        <div class="options" role="radiogroup" aria-label="Car type">
+          <label class="opt"><input type="radio" name="car" checked><span class="opt-name">eDryv Basic</span><span class="opt-meta">4 seats</span><span class="opt-eta">3 min away</span></label>
+          <label class="opt"><input type="radio" name="car"><span class="opt-name">eDryv Plus</span><span class="opt-meta">7 seats</span><span class="opt-eta">6 min away</span></label>
+        </div>
+        <button class="btn btn-signal btn-wide" type="submit">See prices</button>
+      </form>
+    </div>
+
+    <p class="scroll-hint" aria-hidden="true"><span class="mouse"></span>Scroll to build the car</p>
+
+    <ol class="steps" aria-label="How an eDryv is put together">
+      <li data-step="0"><span class="n">1</span><h2>The battery sits flat under the floor.</h2><p>Weight stays low, so the ride feels planted and the cabin stays quiet.</p></li>
+      <li data-step="1"><span class="n">2</span><h2>Motors drive the wheels directly.</h2><p>No gearbox, no oil changes, no trips to the mechanic for the usual engine trouble.</p></li>
+      <li data-step="2"><span class="n">3</span><h2>Seats for four or seven.</h2><p>Basic carries four and 15 kg of luggage. Plus carries seven and 20 kg.</p></li>
+      <li data-step="3"><span class="n">4</span><h2>Body on. Zero tailpipe.</h2><p>Nothing comes out of the back, and you save up to half of what you'd spend on fuel.</p></li>
+    </ol>
+
+    <div class="configure" aria-label="Choose a paint">
+      <p class="drag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Drag to turn it around</p>
+      <div class="swatches" role="radiogroup" aria-label="Paint">
+        <button class="sw" role="radio" aria-checked="true" data-paint="#12574d" style="--c:#12574d"><span>Imperial Green</span></button>
+        <button class="sw" role="radio" aria-checked="false" data-paint="#0e1211" style="--c:#0e1211"><span>Jet Black</span></button>
+        <button class="sw" role="radio" aria-checked="false" data-paint="#e6ebe9" style="--c:#e6ebe9"><span>Oxygen White</span></button>
+        <button class="sw" role="radio" aria-checked="false" data-paint="#9dc73c" style="--c:#9dc73c"><span>Lime Green</span></button>
+      </div>
+      <p class="paint-name" id="paintName">Imperial Green</p>
+      <a class="btn btn-signal" href="#app">Book this car</a>
+    </div>
+
+    <div class="rail" aria-hidden="true"><span id="railFill"></span></div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="services" id="services">
+  <div class="wrap services-grid">
+    <div class="services-head">
+      <h2 class="h-xl">One fleet, five ways to use it.</h2>
+      <p>Every service runs on the same electric cars and the same app.</p>
+    </div>
+    <ul class="svc-list">
+      <li class="svc"><h3>Ride</h3><p>Point-to-point trips with a professional driver. Tap, get picked up, pay in the app.</p><a href="#app">Book a ride</a></li>
+      <li class="svc"><h3>Proxy</h3><p>Book a car for a parent, a guest or a colleague and follow their trip live from your phone.</p><a href="#app">Book for someone</a></li>
+      <li class="svc"><h3>Rental</h3><p>Keep a car and driver by the hour or the day, for errands, events or a team offsite.</p><a href="#app">Rent a car</a></li>
+      <li class="svc"><h3>Reservation</h3><p>Lock in an airport run or an early meeting days ahead, with the price fixed at booking.</p><a href="#app">Schedule a trip</a></li>
+      <li class="svc"><h3>Ads</h3><p>Put your brand on in-car screens seen by riders across Lekki, Ikoyi and the Island.</p><a href="#">Talk to sales</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ STATIONS ============ -->
+<section class="stations" id="stations">
+  <div class="wrap">
+    <div class="stations-head">
+      <h2 class="h-xl">Find a free charger before you leave.</h2>
+      <p>Live bay status for every eDryv charge point. Open to any EV, not just ours.</p>
+    </div>
+    <div class="stations-grid">
+      <div class="map" aria-label="Map of charge points">
+        <svg viewBox="0 0 600 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="600" height="460" fill="var(--imperial-deep)"/>
+          <path d="M0 0H600V180C540 196 500 214 452 206C400 198 360 226 300 232C236 238 200 214 150 226C96 238 50 262 0 258Z" fill="#0b3d36"/>
+          <path d="M0 300C70 292 120 318 190 312C258 306 300 286 370 292C440 298 520 330 600 318V460H0Z" fill="#0b3d36"/>
+          <path d="M210 250C250 244 300 262 350 258C400 254 430 266 470 262" stroke="#0b3d36" stroke-width="26" fill="none" stroke-linecap="round"/>
+          <g stroke="rgba(233,240,236,.12)" stroke-width="2" fill="none">
+            <path d="M0 120C140 110 220 150 320 140S520 90 600 100"/>
+            <path d="M80 0C90 80 120 140 110 230"/>
+            <path d="M300 0C310 60 290 120 300 232"/>
+            <path d="M0 380C120 370 260 390 380 372S560 352 600 360"/>
+            <path d="M460 300C470 350 480 400 470 460"/>
+          </g>
+          <g fill="rgba(233,240,236,.4)" font-family="Archivo" font-size="12" letter-spacing=".02em">
+            <text x="60" y="80">Ikeja</text><text x="320" y="60">Yaba</text>
+            <text x="250" y="276">Lagos Lagoon</text>
+            <text x="120" y="350">Victoria Island</text><text x="370" y="340">Ikoyi</text><text x="480" y="410">Lekki</text>
+          </g>
+        </svg>
+        <button class="pin" style="--x:79%;--y:84%" data-i="0" aria-label="Admiralty Way, 4 free"><span>4</span></button>
+        <button class="pin" style="--x:24%;--y:73%" data-i="1" aria-label="Ozumba Mbadiwe, 1 free"><span>1</span></button>
+        <button class="pin busy" style="--x:58%;--y:70%" data-i="2" aria-label="Bourdillon Road, full"><span>0</span></button>
+        <button class="pin" style="--x:53%;--y:21%" data-i="3" aria-label="Herbert Macaulay Way, 3 free"><span>3</span></button>
+        <button class="pin" style="--x:16%;--y:24%" data-i="4" aria-label="Isaac John Street, 5 free"><span>5</span></button>
+      </div>
+
+      <div class="finder">
+        <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input placeholder="Search an area or street" aria-label="Search stations"></label>
+        <div class="chips" role="group" aria-label="Filters">
+          <button aria-pressed="true">Free now</button><button aria-pressed="false">DC fast</button><button aria-pressed="false">Open 24 hours</button>
+        </div>
+        <ul class="st-list" id="stList">
+          <li class="st" data-i="0"><div><h3>Admiralty Way</h3><p>Lekki Phase 1 <span>2.1 km</span></p></div><div class="bays"><b>4 of 6 free</b><span class="meter"><i style="width:67%"></i></span><small>120 kW DC</small></div></li>
+          <li class="st" data-i="1"><div><h3>Ozumba Mbadiwe</h3><p>Victoria Island <span>5.4 km</span></p></div><div class="bays"><b>1 of 4 free</b><span class="meter"><i style="width:25%"></i></span><small>60 kW DC</small></div></li>
+          <li class="st busy" data-i="2"><div><h3>Bourdillon Road</h3><p>Ikoyi <span>6.0 km</span></p></div><div class="bays"><b>Full, about 15 min</b><span class="meter"><i style="width:0"></i></span><small>60 kW DC</small></div></li>
+          <li class="st" data-i="3"><div><h3>Herbert Macaulay Way</h3><p>Yaba <span>11.8 km</span></p></div><div class="bays"><b>3 of 8 free</b><span class="meter"><i style="width:38%"></i></span><small>22 kW AC</small></div></li>
+          <li class="st" data-i="4"><div><h3>Isaac John Street</h3><p>Ikeja GRA <span>19.3 km</span></p></div><div class="bays"><b>5 of 6 free</b><span class="meter"><i style="width:83%"></i></span><small>120 kW DC</small></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHARGING STEPS ============ -->
+<section class="charge" aria-labelledby="chargeTitle">
+  <div class="wrap">
+    <h2 class="h-xl" id="chargeTitle">Charging takes four steps.</h2>
+    <ol class="battery">
+      <li><span class="cell"></span><h3>Drive in</h3><p>Pick a station in the app and park in a marked eDryv bay.</p></li>
+      <li><span class="cell"></span><h3>Plug in</h3><p>Connect the cable. CCS2 and Type 2 at every site.</p></li>
+      <li><span class="cell"></span><h3>Tap to pay</h3><p>Start the session in the app or with any contactless card.</p></li>
+      <li><span class="cell"></span><h3>Charge up</h3><p>Watch the percentage from your phone. We'll ping you at 80%.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ FLEET ============ -->
+<section class="fleet" id="fleet">
+  <div class="wrap">
+    <div class="fleet-head">
+      <h2 class="h-xl">The fleet.</h2>
+      <p>Five models, all fully electric. You can choose the car when you book.</p>
+    </div>
+  </div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <path id="carside" d="M14 116 L42 116 L42 108 A48 48 0 0 1 138 108 L138 116 L322 116 L322 108 A48 48 0 0 1 418 108 L418 116 L446 114 Q462 102 458 82 Q450 66 420 64 L320 52 Q270 12 218 2 L110 3 Q55 10 35 50 Q8 54 6 70 L4 104 Q5 116 14 116 Z"/>
+      <path id="carglass" d="M312 54 Q266 20 218 12 L150 12 L150 54 Z M140 12 L112 13 Q72 18 52 52 L140 54 Z"/>
+      <g id="wheels"><circle cx="90" cy="108" r="38" fill="#121816"/><circle cx="90" cy="108" r="22" fill="#a9b4b1"/><circle cx="370" cy="108" r="38" fill="#121816"/><circle cx="370" cy="108" r="22" fill="#a9b4b1"/></g>
+    </defs>
+  </svg>
+  <ul class="models" tabindex="0" aria-label="Fleet models">
+    <li class="model"><svg viewBox="-4 -6 474 160" style="--paint:#12574d"><use href="#carside" fill="var(--paint)"/><use href="#carglass" fill="#0d1a18"/><use href="#wheels"/></svg><h3>eDryv Plus</h3><dl><div><dt>Seats</dt><dd>7</dd></div><div><dt>Luggage</dt><dd>20 kg</dd></div></dl><p class="paints"><i style="--c:#0e1211"></i><i style="--c:#12574d"></i><i style="--c:#e6ebe9"></i>Jet Black, Imperial Green, Oxygen White</p></li>
+    <li class="model"><svg viewBox="-4 -6 474 160" style="--paint:#9dc73c"><use href="#carside" fill="var(--paint)"/><use href="#carglass" fill="#0d1a18"/><use href="#wheels"/></svg><h3>eDryv Basic</h3><dl><div><dt>Seats</dt><dd>4</dd></div><div><dt>Luggage</dt><dd>15 kg</dd></div></dl><p class="paints"><i style="--c:#12574d"></i><i style="--c:#e6ebe9"></i><i style="--c:#9dc73c"></i>Imperial Green, Oxygen White, Lime Green</p></li>
+    <li class="model"><svg viewBox="-4 -6 474 160" style="--paint:#7d8885"><use href="#carside" fill="var(--paint)"/><use href="#carglass" fill="#0d1a18"/><use href="#wheels"/></svg><h3>Wuling Bingo Plus</h3><dl><div><dt>Seats</dt><dd>5</dd></div><div><dt>Luggage</dt><dd>20 kg</dd></div></dl><p class="paints"><i style="--c:#7d8885"></i>Storm Grey</p></li>
+    <li class="model"><svg viewBox="-4 -6 474 160" style="--paint:#9aa29f"><use href="#carside" fill="var(--paint)"/><use href="#carglass" fill="#0d1a18"/><use href="#wheels"/></svg><h3>Arcfox Kaola</h3><dl><div><dt>Seats</dt><dd>4</dd></div><div><dt>Luggage</dt><dd>15 kg</dd></div></dl><p class="paints"><i style="--c:#9aa29f"></i>Fox Grey</p></li>
+    <li class="model"><svg viewBox="-4 -6 474 160" style="--paint:#5d6664"><use href="#carside" fill="var(--paint)"/><use href="#carglass" fill="#0d1a18"/><use href="#wheels"/></svg><h3>Arcfox Alpha S5</h3><dl><div><dt>Seats</dt><dd>4</dd></div><div><dt>Luggage</dt><dd>15 kg</dd></div></dl><p class="paints"><i style="--c:#5d6664"></i>Grey</p></li>
+  </ul>
+</section>
+
+<!-- ============ APP CTA ============ -->
+<section class="app" id="app">
+  <div class="wrap app-grid">
+    <div>
+      <h2 class="h-xxl">Your next ride is already charged.</h2>
+      <p>Get the eDryv app to book rides, find chargers and pay for both in one place.</p>
+      <div class="stores">
+        <a class="store" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.8-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.7 0 0-2.5-1-2.5-3.7zM14.1 5.8c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg><span><small>Download on the</small>App Store</span></a>
+        <a class="store" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.8v18.4c0 .3.3.5.6.4l10.3-9.4L4.6 2.4c-.3-.1-.6.1-.6.4zm12.1 8.2 2.9-2.7-12.4-6.9 9.5 9.6zm0 2-9.5 9.6 12.4-6.9-2.9-2.7zm4.2-3.9-2.9 1.6 3.1 1.7c.8-.4.8-1.6 0-2l-.2-.1v-1.2z"/></svg><span><small>Get it on</small>Google Play</span></a>
+      </div>
+    </div>
+    <ul class="join">
+      <li><a href="#"><h3>Drive with eDryv</h3><p>Earn on a fully electric car. We handle charging and maintenance.</p></a></li>
+      <li><a href="#"><h3>Become a partner</h3><p>Host a charge point at your site or bring your fleet onto our network.</p></a></li>
+      <li><a href="#"><h3>Advertise on the fleet</h3><p>Reach riders on in-car screens across the Island.</p></a></li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <a class="brand" href="#top" aria-label="eDryv home"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="currentColor"/><path d="M9 17.5h13.6a6.8 6.8 0 1 0-1.9 5.2" fill="none" stroke="var(--imperial-deep)" stroke-width="2.6" stroke-linecap="round"/></svg><span>eDryv</span></a>
+    <nav aria-label="Footer"><a href="#">About</a><a href="#services">Services</a><a href="#stations">Charge stations</a><a href="#">Gallery</a><a href="#">Contact</a></nav>
+    <p class="folti">An electric mobility company by <a href="https://www.folti.io/">Foltï</a>.</p>
+    <p class="legal">© 2026 eDryv <a href="#">Privacy</a> <a href="#">Terms</a></p>
+  </div>
+</footer>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
